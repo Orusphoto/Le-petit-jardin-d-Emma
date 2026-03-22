@@ -1,0 +1,708 @@
+/* --- Importation de la police Poppins --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    /* Palette Apple Glass */
+    --glass-bg: rgba(255, 255, 255, 0.4); /* Fond blanc très translucide */
+    --glass-border: rgba(255, 255, 255, 0.4); /* Bordure brillante */
+    --glass-shadow: rgba(0, 0, 0, 0.1);
+    
+    --apple-green: #285430; /* Vert profond d'Apple */
+    --apple-text: #1d1d1f; /* Le noir/gris des interfaces Apple */
+    
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 20px;
+    color: var(--apple-text);
+    
+    /* LE SECRET : Un fond dégradé fixe pour que le verre "brille" au scroll */
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 40%, #81c784 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+/* --- Header & Recherche --- */
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-weight: 600;
+    letter-spacing: -1px;
+    color: var(--apple-green);
+    font-size: 2.8rem;
+}
+
+.search-container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 14px 25px;
+    border-radius: 50px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    outline: none;
+    font-family: inherit;
+    box-shadow: 0 4px 15px var(--glass-shadow);
+    transition: var(--transition-smooth);
+}
+
+#searchInput:focus {
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+/* --- Formulaire (Le Panneau de Verre) --- */
+.form-container {
+    max-width: 650px;
+    margin: 0 auto 50px auto;
+    padding: 30px;
+    border-radius: 30px;
+    
+    /* Effet Glassmorphism */
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 20px 40px var(--glass-shadow);
+    
+    transition: var(--transition-smooth);
+}
+
+/* Cache le formulaire au scroll */
+.form-hidden {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.95);
+    pointer-events: none;
+}
+
+#plantForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-group {
+    display: flex;
+    gap: 15px;
+}
+
+input, select, textarea {
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.05);
+    background: rgba(255,255,255,0.4);
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+button {
+    background: var(--apple-green);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(40, 84, 48, 0.3);
+}
+
+/* --- Grille et Cartes --- */
+.plant-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.plant-card {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 32px;
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+    position: relative;
+    transition: var(--transition-smooth);
+    box-shadow: 0 10px 25px var(--glass-shadow);
+}
+
+.plant-card:hover {
+    transform: translateY(-15px);
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+}
+
+/* --- LE CONTENEUR (Le cadre de la photo) --- */
+.image-container {
+    width: 100%;
+    height: 220px;
+    overflow: hidden; /* Coupe ce qui dépasse pendant le zoom */
+    position: relative;
+    /* Force le rendu propre des coins arrondis sur Safari/Chrome pendant l'anim */
+    isolation: isolate; 
+    border-top-left-radius: 32px;
+    border-top-right-radius: 32px;
+}
+
+/* --- L'IMAGE (L'animation cinématique) --- */
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+
+    /* LA FORMULE MAGIQUE :
+       1. 1.8s : Une durée très longue pour que la fin soit invisible.
+       2. cubic-bezier(0.16, 1, 0.3, 1) : La courbe "Quintic Out" (très réactive).
+       3. will-change : Prévient le processeur que ça va bouger (évite les micro-saccades).
+    */
+    transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+    transform: scale(1); /* État de base */
+}
+
+/* --- L'EFFET AU SURVOL --- */
+.plant-card:hover .image-container img {
+    /* On reste sur un zoom léger (8%) pour garder le côté luxe */
+    transform: scale(1.08); 
+}
+
+/* --- L'EFFET AU CLIC (Feedback tactile) --- */
+.plant-card:active .image-container img {
+    /* Quand on appuie, l'image se stabilise un peu */
+    transform: scale(1.04);
+    transition: transform 0.3s ease-out;
+}
+
+.plant-card {
+    /* ... tes autres styles ... */
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.4s ease;
+}
+
+.plant-info {
+    padding: 20px;
+    text-align: center;
+}
+
+.plant-info h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: var(--apple-green);
+}
+
+/* --- LA FENÊTRE NOIRE (L'arrière-plan) --- */
+/* --- ANIMATION DE LA FENÊTRE (MODALE) --- */
+
+.modal {
+    display: none; /* Gardé pour le JS, mais on va l'animer avec une classe */
+    position: fixed;
+    z-index: 9999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0); /* On part de transparent */
+    backdrop-filter: blur(0px); /* On part de sans flou */
+    transition: all 0.4s ease; /* Transition douce pour le fond */
+    overflow-y: auto;
+}
+
+/* Quand on ajoute la classe .active via le JS */
+.modal.active {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
+}
+
+.modal-content {
+    /* État de départ : petit et un peu plus bas */
+    transform: scale(0.8) translateY(40px);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* Effet "ressort" Apple */
+    
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(25px) saturate(200%);
+    border: 1px solid rgba(255,255,255,0.5);
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 40px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+/* État final : Grandeur réelle et bien placé */
+.modal.active .modal-content {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+/* Petite animation au clic sur la carte elle-même */
+.plant-card:active {
+    transform: scale(0.95); /* La carte s'enfonce légèrement quand on clique */
+}
+
+/* --- LE BOUTON FERMER STYLE APPLE GLASS --- */
+.close-modal {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 35px;
+    height: 35px;
+    
+    /* Effet Glassmorphism */
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    
+    border-radius: 50%; /* Cercle parfait */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    font-size: 18px;
+    color: var(--apple-text);
+    cursor: pointer;
+    z-index: 100;
+    transition: var(--transition-smooth);
+}
+
+.close-modal:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: rotate(90deg) scale(1.1); /* Petite rotation fun au survol */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* On s'assure que le symbole X est bien centré */
+.close-modal::before {
+    content: "✕"; /* Utilise un symbole plus fin que le "x" du clavier */
+    font-weight: bold;
+}
+
+.edit-group {
+    margin-bottom: 20px;
+}
+
+.edit-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    color: var(--apple-green);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.edit-group input, .edit-group select, .edit-group textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0,0,0,0.05);
+    padding: 12px;
+}
+
+/* --- Boutons et Extras --- */
+/* --- LE BOUTON SUPPRIMER STYLE APPLE GLASS --- */
+.delete-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 32px;
+    height: 32px;
+    
+    /* Effet Glassmorphism identique */
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0; /* Caché par défaut */
+    transition: var(--transition-smooth);
+    color: var(--apple-text);
+}
+
+/* Apparition quand on survole la carte */
+.plant-card:hover .delete-btn {
+    opacity: 1;
+}
+
+/* Effet au survol du bouton lui-même */
+.delete-btn:hover {
+    background: rgba(255, 59, 48, 0.2); /* Teinte rouge très légère (Apple Red) */
+    border-color: rgba(255, 59, 48, 0.4);
+    color: #ff3b30;
+    transform: rotate(90deg) scale(1.1);
+}
+
+/* Le symbole X */
+.delete-btn::before {
+    content: "✕";
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#floatingAddBtn {
+    position: fixed;
+    top: 30px; right: 30px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    color: var(--apple-green);
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    box-shadow: 0 10px 30px var(--glass-shadow);
+    z-index: 800;
+    opacity: 0;
+    transform: translateX(100px);
+    transition: var(--transition-smooth);
+}
+
+#floatingAddBtn.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+/* ============================================================
+   MOBILE ADAPTATION (Responsive Design)
+   ============================================================ */
+
+/* Pour les tablettes et téléphones (écrans de moins de 768px) */
+@media (max-width: 768px) {
+    body {
+        padding: 10px; /* Moins d'espace sur les bords */
+    }
+
+    header h1 {
+        font-size: 2rem; /* Titre plus petit */
+    }
+
+    /* Le formulaire prend toute la largeur */
+    .form-container {
+        padding: 20px;
+        margin-bottom: 30px;
+        width: 100%;
+    }
+
+    /* Les champs de saisie s'empilent au lieu d'être côte à côte */
+    .input-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .input-group input, .input-group select {
+        width: 100%;
+    }
+    
+
+    /* La grille passe à 1 ou 2 colonnes maximum */
+    .plant-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+        gap: 20px;
+    }
+
+    /* La fenêtre modale (l'affiche) prend plus de place */
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 20px;
+        border-radius: 30px;
+    }
+
+    /* Le bouton flottant se déplace un peu pour ne pas gêner */
+    #floatingAddBtn {
+        top: auto;
+        bottom: 20px; /* On le met en bas à droite, plus facile pour le pouce */
+        right: 20px;
+        padding: 15px 25px;
+    }
+}
+
+/* Pour les tout petits téléphones (moins de 480px) */
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.6rem;
+    }
+    
+    .plant-card {
+        border-radius: 20px;
+    }
+
+    .image-container {
+        height: 180px; /* Images un peu moins hautes */
+    }
+}
+/* Style spécifique pour la confirmation de suppression */
+.delete-confirm {
+    max-width: 350px; /* Plus petite que la modale de détails */
+    text-align: center;
+    padding: 40px 30px;
+}
+
+.delete-confirm h3 {
+    margin-top: 0;
+    color: #d32f2f; /* Un rouge Apple pour le danger */
+}
+
+.delete-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.btn-danger {
+    background: rgba(211, 47, 47, 0.8);
+    flex: 1;
+}
+
+.btn-secondary {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--apple-text);
+    flex: 1;
+}
+
+.btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+.file-input-wrapper {
+    text-align: center;
+    margin-top: 5px;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 10px 20px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+    transition: var(--transition-smooth);
+    font-size: 0.9rem;
+}
+
+.custom-file-upload:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.02);
+}
+/* Container de l'image dans la modale */
+.modal-image-container {
+    width: 100%;
+    height: 250px; /* Hauteur fixe pour que ça reste propre */
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.modal-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* L'image remplit le cadre sans se déformer */
+}
+
+/* Ajustement pour mobile : on réduit un peu la hauteur de l'image sur petit écran */
+@media (max-width: 480px) {
+    .modal-image-container {
+        height: 180px;
+    }
+}
+/* --- LE CUSTOM SELECT --- */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    margin: 8px 0 18px 0;
+    user-select: none;
+}
+
+.dropdown-trigger {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 14px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: var(--transition-apple);
+}
+
+.dropdown-trigger:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.dropdown-trigger .arrow {
+    border: solid var(--apple-green);
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    transition: 0.3s;
+}
+
+/* Quand le menu est ouvert */
+.custom-dropdown.active .dropdown-trigger .arrow {
+    transform: rotate(-135deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 18px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+.custom-dropdown.active .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-option {
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.95rem;
+}
+
+.dropdown-option:hover {
+    background: rgba(45, 90, 39, 0.1);
+    color: var(--apple-green);
+}
+
+.dropdown-option.selected {
+    background: rgba(45, 90, 39, 0.2);
+    font-weight: 600;
+}
+/* Assure-toi que la liste déroulante passe bien devant tout */
+.dropdown-menu {
+    z-index: 2000; /* Plus haut que tout le reste */
+}
+
+/* On stylise un peu mieux le label par défaut (quand rien n'est choisi) */
+#categoryLabel, #dangerLabel {
+    font-size: 0.95rem;
+    color: var(--apple-text);
+}
+/* --- ANIMATION D'ENTRÉE (SPRING POP) --- */
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: scale(0.5) translateY(30px);
+        filter: blur(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+    }
+}
+
+.plant-card {
+    /* ... tes styles existants ... */
+    /* On applique l'animation par défaut quand la carte est créée */
+    animation: cardEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+/* --- L'ANIMATION DE RÉVÉLATION GLOBALE --- */
+@keyframes revealPage {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+        filter: blur(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* On prépare les éléments pour qu'ils soient invisibles avant l'anim */
+.form-container, 
+.search-container, 
+#plantGrid {
+    animation: revealPage 1s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+/* --- LE DÉCALAGE (STAGGER) --- */
+
+/* 1. Le formulaire arrive en premier (0s) */
+.form-container {
+    animation-delay: 0.1s;
+}
+
+/* 2. La barre Spotlight arrive juste après */
+.search-container {
+    animation-delay: 0.3s;
+}
+
+/* 3. La grille de plantes arrive en dernier */
+#plantGrid {
+    animation-delay: 0.5s;
+}
+/* --- 1. LE CONTENEUR DU FORMULAIRE --- */
+.form-container {
+    position: relative; /* Indispensable pour que le z-index fonctionne */
+    z-index: 900;       /* On le place au-dessus de la grille (qui est à 0 par défaut) */
+    
+    /* ... tes autres styles (background, padding, etc.) ... */
+}
+
+/* --- 2. LE MENU DÉROULANT (DROPDOWN) --- */
+.dropdown-menu {
+    /* On s'assure qu'il est encore plus haut que son parent */
+    z-index: 1000; 
+    
+    /* On ajoute une petite ombre plus prononcée pour bien le détacher du fond */
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    
+    /* ... tes autres styles ... */
+}
+
+/* --- 3. LA RECHERCHE SPOTLIGHT --- */
+.search-container {
+    /* On baisse un peu son z-index par rapport au formulaire 
+       pour ne pas gêner si le menu descend bas */
+    z-index: 800; 
+    
+    /* ... tes autres styles ... */
+}

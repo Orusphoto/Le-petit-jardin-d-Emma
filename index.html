@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Herbier Numérique</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <h1>🌿 Le Petit Jardin d'Emma</h1>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Rechercher une plante...">
+        </div>
+    </header>
+
+    <section class="form-container">
+        <form id="plantForm">
+            <div class="input-group">
+                <input type="text" id="commonName" placeholder="Nom de la plante (ex: Lotus)" required>
+                <input type="text" id="latinName" placeholder="Nom latin" required>
+            </div>
+            
+            <div class="input-group" style="flex-direction: column; gap: 10px;">
+    <input type="url" id="imageLink" placeholder="Lien URL de l'image (Optionnel)">
+    
+    <div style="text-align: center; font-size: 0.8rem; opacity: 0.6;">— OU —</div>
+    
+    <div class="file-input-wrapper">
+        <label for="imageFile" class="custom-file-upload">
+            📸 Choisir une photo sur mon appareil
+        </label>
+        <input type="file" id="imageFile" accept="image/*" style="display: none;">
+        <span id="fileNameDisplay" style="font-size: 0.8rem; margin-top: 5px; display: block;">Aucun fichier choisi</span>
+    </div>
+</div>
+                <div class="input-group">
+    <div class="input-group">
+    <label>Type de plante</label>
+    <div class="custom-dropdown" id="categoryDropdown">
+        <div class="dropdown-trigger">
+            <span id="categoryLabel">Choisir un type</span>
+            <div class="arrow"></div>
+        </div>
+        <div class="dropdown-menu">
+            <div class="dropdown-option" data-val="Fleur">🌸 Fleur</div>
+            <div class="dropdown-option" data-val="Arbre">🌳 Arbre</div>
+            <div class="dropdown-option" data-val="Plante Verte">🌿 Plante Verte</div>
+            <div class="dropdown-option" data-val="Arbuste">🌵 Arbuste</div>
+        </div>
+    </div>
+    <input type="hidden" id="category" value="">
+</div>
+    <input type="hidden" id="category" value="">
+</div>
+            
+            <button type="submit">Ajouter à mon herbier</button>
+        </form>
+    </section>
+
+    <main class="plant-grid" id="plantGrid">
+        </main>
+
+    <div id="plantModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal"></span>
+        
+        <div id="modalBody"></div>
+        
+        <button id="saveDetailsBtn">Sauvegarder les modifications</button>
+    </div>
+</div>
+
+    <button id="floatingAddBtn" title="Ajouter une plante">Add Plant +</button>
+
+    <script type="module" src="script.js"></script>
+    <div id="deleteModal" class="modal">
+    <div class="modal-content delete-confirm">
+        <h3>Supprimer cette plante ?</h3>
+        <p>Cette action est irréversible. Es-tu sûr de toi ?</p>
+        <div class="delete-actions">
+            <button id="confirmDeleteBtn" class="btn-danger">Oui, supprimer</button>
+            <button id="cancelDeleteBtn" class="btn-secondary">Annuler</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
